@@ -46,14 +46,16 @@ def abides(agents, props, oracle, name):
     :return: agent_states (saved states for each agent at the end of the simulation)
     """
 ```
+
 ```
-def config(params):
+def config(seed, params):
     """ create the list of agents for the simulation
 
     :param params: abides config parameters
     :return: list of agents given a set of parameters
     """
 ```
+
 ```
 def objective(trial):
     """ The objective function to be optimized given parameters of the agent-based model
@@ -61,13 +63,24 @@ def objective(trial):
     :param trial: a single execution of the objective function
     :return: objective function
     """
-```
 
-```
-def visualise(study):
-    """ visualise the study results using optuna visualization
+    params = {
+        'n_value': trial.suggest_int('n_value', 1, 100),
+        'n_noise': trial.suggest_int('n_value', 1, 100)
+    }
 
-    :param study:
-    :return: None
-    """
+    # 1) get list of agents using params
+    agents = config(SEED, params)
+
+    # 2) run abides
+    agents_saved_states = abides(name=trial.number,
+                                 agents=agents,
+                                 oracle=oracle(),
+                                 latency_model=latency_model(num_agents=len(agents)),
+                                 default_computation_delay=1000)# one millisecond
+
+    # 3) run abides with the set of agents and properties and observe the resulting agent states
+    exchange, gains = agents_saved_states[0], agents_saved_states[1:]
+
+    return sum(gains)  # simple objective to maximize the gains of all agents
 ```
