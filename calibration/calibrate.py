@@ -61,7 +61,8 @@ def objective(trial):
     """
 
     params = {
-        'n_value': trial.suggest_int('n_value', 1, 100)
+        'n_value': trial.suggest_int('n_value', 1, 100),
+        'n_noise': trial.suggest_int('n_noise', 1, 5000)
     }
 
     # 1) get list of agents using params
@@ -91,13 +92,14 @@ if __name__ == "__main__":
     log.info('=' * len(system_name))
     log.info(' ')
 
+    log.info(f'Seed: {SEED}')
+
+
     study_name = 'abides_study'
     log.info(f'Study : {study_name}')
 
-    log.info(f'Seed: {SEED}')
-
-    n_trials = 1
-    n_jobs = 1  # psutil.cpu_count()
+    n_trials = 100
+    n_jobs = psutil.cpu_count()
 
     log.info(f'Number of Trials : {n_trials}')
     log.info(f'Number of Parallel Jobs : {n_jobs}')

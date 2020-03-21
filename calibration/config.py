@@ -32,8 +32,8 @@ CASH_VALUE  = 1e7
 
 R_BAR       = 1e5        # true mean fundamental value
 SIGMA_N     = R_BAR / 10 # observation noise variance
-KAPPA       = 1.67e-15   # mean reversion parameter
-LAMBDA_A    = 7e-11      # mean arrival rate of value agents
+KAPPA       = 1.67e-12   # mean reversion parameter
+LAMBDA_A    = 1e-12 #7e-11      # mean arrival rate of value agents
 
 # OU process
 MU          = R_BAR
@@ -102,8 +102,8 @@ def config(seed, params):
                                                              pd.Timestamp(f'{DATE} 16:00:00')),
                               log_orders=False,
                               random_state=np.random.RandomState(seed=np.random.randint(low=0, high=2 ** 32)))
-                   for j in range(agent_count, agent_count + N_NOISE)])
-    agent_count += N_NOISE
+                   for j in range(agent_count, agent_count + params['n_noise'])])
+    agent_count += params['n_noise']
 
     # 3) Value Agents
     agents.extend([ValueAgent(id=j,
